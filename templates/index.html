@@ -1,0 +1,1046 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niz Ayar Evi - Kıymetli Maden Analiz & Hesaplama</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body { background-color: #0b1120; color: #f1f5f9; font-family: system-ui, sans-serif; padding-bottom: 75px; position: relative; }
+    
+    /* EN ÜST LOGO & BAŞLIK ALANI */
+    .top-branding-bar {
+        padding: 16px 0 10px 0;
+    }
+    .hero-logo {
+        max-height: 52px;
+        width: auto;
+        filter: invert(74%) sepia(42%) saturate(942%) hue-rotate(359deg) brightness(91%) contrast(89%);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .hero-logo:hover {
+        transform: scale(1.03);
+    }
+
+    /* MİNİMAL YÖNETİCİ & ÇIKIŞ LİNKLERİ */
+    .top-action-link {
+        color: #94a3b8;
+        font-size: 12px;
+        text-decoration: none;
+        opacity: 0.8;
+        transition: all 0.2s ease;
+    }
+    .top-action-link:hover {
+        color: #d4af37;
+        opacity: 1;
+    }
+    .top-logout-link {
+        color: #ef4444;
+        font-size: 12px;
+        text-decoration: none;
+        opacity: 0.85;
+        transition: all 0.2s ease;
+    }
+    .top-logout-link:hover {
+        color: #f87171;
+        opacity: 1;
+    }
+
+    /* HEADER KARTI */
+    .hero-card {
+        background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+        border: 1px solid #334155;
+        border-radius: 16px;
+    }
+
+    .card-custom { background-color: #151d2c; border: 1px solid #243044; border-radius: 14px; }
+
+    .text-secondary { color: #94a3b8 !important; }
+
+    label, .form-label, .col-form-label {
+        color: #cbd5e1 !important;
+        font-weight: 500;
+    }
+
+    /* İNPUT VE YAZI RENKLERİ */
+    .form-control, .form-select { 
+        background-color: #0d1524 !important; 
+        border: 1px solid #2a384e !important; 
+        color: #ffffff !important; 
+        border-radius: 8px; 
+        font-size: 13.5px; 
+    }
+    .form-control:focus, .form-select:focus { 
+        background-color: #0d1524 !important; 
+        border-color: #d4af37 !important; 
+        color: #ffffff !important; 
+        box-shadow: 0 0 0 2px rgba(212,175,55,0.25); 
+    }
+
+    /* KUTU İÇİ YAZILAR (PLACEHOLDER) */
+    ::placeholder {
+        color: #cbd5e1 !important;
+        opacity: 1 !important;
+        -webkit-text-fill-color: #cbd5e1 !important;
+    }
+    ::-webkit-input-placeholder {
+        color: #cbd5e1 !important;
+        opacity: 1 !important;
+        -webkit-text-fill-color: #cbd5e1 !important;
+    }
+    :-moz-placeholder {
+        color: #cbd5e1 !important;
+        opacity: 1 !important;
+    }
+    ::-moz-placeholder {
+        color: #cbd5e1 !important;
+        opacity: 1 !important;
+    }
+    
+    .btn-gold { background-color: #f59e0b; color: #000000; font-weight: 700; border-radius: 8px; border: none; font-size: 13.5px; }
+    .btn-gold:hover { background-color: #d97706; color: #000000; }
+
+    .btn-ocak {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        color: #f59e0b !important;
+        border: 1px solid #f59e0b;
+        font-weight: 700;
+        border-radius: 8px;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+    .btn-ocak:hover {
+        background: #f59e0b;
+        color: #000000 !important;
+        box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+    }
+    
+    .btn-tab { background-color: #1e293b; color: #94a3b8; font-weight: 600; border: 1px solid #334155; border-radius: 8px; padding: 6px 14px; font-size: 13px; }
+    .btn-tab:hover { color: #ffffff; border-color: #64748b; }
+    .btn-tab.active { background-color: #f59e0b; color: #000000; border-color: #f59e0b; font-weight: 700; }
+    
+    /* HESAPLAMA SONUÇ KUTUSU */
+    .result-box { 
+        background-color: #0d1524 !important; 
+        border: 1px dashed #f59e0b !important; 
+        border-radius: 10px; 
+        padding: 14px; 
+        color: #cbd5e1 !important;
+    }
+    .result-box p { color: #cbd5e1 !important; margin-bottom: 6px; }
+    .result-box span { color: #94a3b8 !important; }
+
+    .table-dark { --bs-table-bg: #151d2c; --bs-table-border-color: #243044; }
+
+    /* TAKOZ HESABI İÇTEN KAYDIRMA */
+    .takoz-scroll-area {
+        max-height: 270px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 6px;
+        margin-bottom: 12px;
+    }
+    .takoz-scroll-area::-webkit-scrollbar { width: 6px; }
+    .takoz-scroll-area::-webkit-scrollbar-track { background: #0d1524; border-radius: 4px; }
+    .takoz-scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .takoz-scroll-area::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+    /* HIZLI AYAR BUTONLARI */
+    .quick-badge-btn {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        color: #cbd5e1;
+        font-size: 10.5px;
+        padding: 1px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .quick-badge-btn:hover {
+        background-color: #f59e0b;
+        color: #000000;
+        border-color: #f59e0b;
+        font-weight: 600;
+    }
+
+    /* GOOGLE PUANLAMA KARTI */
+    .google-review-card {
+        background: #0d1524;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .google-review-card:hover {
+        border-color: #f59e0b;
+        background: #111c2e;
+        transform: translateY(-1px);
+    }
+    .star-gold { color: #f59e0b; font-size: 14px; letter-spacing: 1px; }
+
+    /* WHATSAPP GELİŞTİRİCİ BUTONU */
+    .btn-whatsapp {
+        background-color: #25D366;
+        color: #ffffff !important;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+    .btn-whatsapp:hover {
+        background-color: #1ebd5a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+
+    .ticker-bar {
+        position: fixed; bottom: 0; left: 0; width: 100%; background-color: #0b1120; border-top: 1px solid #78350f; color: #94a3b8; overflow: hidden; white-space: nowrap; z-index: 9999; padding: 7px 0; font-size: 12px;
+    }
+    .ticker-content { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerAnimation 50s linear infinite; }
+    @keyframes tickerAnimation { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+    /* HEADER KARTI BUTONLARI */
+    .hero-action-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* MOBİL GÖRÜNÜM */
+    @media (max-width: 767.98px) {
+        .hero-action-container {
+            flex-direction: column;
+            gap: 12px;
+        }
+        .hero-btn-group-left, .hero-btn-group-right {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+        }
+        .hero-btn-group-left a, .hero-btn-group-right a {
+            flex: 1;
+            text-align: center;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+    }
+
+    /* WEB / MASAÜSTÜ GÖRÜNÜM */
+    @media (min-width: 768px) {
+        .hero-action-container {
+            flex-direction: row;
+        }
+        .hero-btn-group-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 165px;
+        }
+        .hero-btn-group-right {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 155px;
+        }
+        .hero-btn-group-right a, .hero-btn-group-left a {
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div style="display:none;">{% csrf_token %}</div>
+
+<div class="container py-2">
+
+    <!-- 1. EN ÜST ALAN: LOGO VE SAĞINDA İSİM VEYA "HOŞ GELDİNİZ, FİRMA ADI" + MİNİMAL ÇIKIŞ & YÖNETİCİ LİNKLERİ -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 top-branding-bar mb-3">
+        <a href="{% url 'anasayfa' %}" onclick="window.location.reload();" title="Sayfayı Yenile" class="d-flex align-items-center text-decoration-none gap-3">
+            <img src="{% static 'images/logo.png' %}" alt="Niz Ayar Evi" class="hero-logo">
+            <div class="border-start border-secondary ps-3">
+                {% if user.is_authenticated %}
+                    <span class="text-secondary small d-block" style="font-size: 11.5px;">Hoş geldiniz,</span>
+                    <h5 class="text-warning fw-bold mb-0" style="letter-spacing: 0.5px;">{% if user.profil.firma_adi %}{{ user.profil.firma_adi }}{% else %}{{ user.username }}{% endif %}</h5>
+                {% else %}
+                    <h5 class="text-warning fw-bold mb-0" style="letter-spacing: 0.5px;">Hüseyin Yeyğel</h5>
+                    <span class="text-secondary small d-block" style="font-size: 12px; letter-spacing: 0.2px;">Değerli Madenler Analiz Laboratuvarı</span>
+                {% endif %}
+            </div>
+        </a>
+
+        <!-- MİNİMAL SAĞ ÜST MENÜ: YÖNETİCİ GİRİŞİ & OTURUM AÇIKSA MİNİMAL ÇIKIŞ -->
+        <div class="d-flex align-items-center gap-3">
+            {% if user.is_authenticated %}
+                <a href="{% url 'cikis' %}" class="top-logout-link d-inline-flex align-items-center gap-1" title="Güvenli Çıkış Yap">
+                    <span>⎋ Çıkış Yap</span>
+                </a>
+                <span class="text-secondary opacity-25">|</span>
+            {% endif %}
+            <a href="/admin/" class="top-action-link d-inline-flex align-items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.54 2.54l.292.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.185 1.184l-.16.291a1.873 1.873 0 0 0 1.115 2.693l.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.16a1.873 1.873 0 0 0-2.693 1.115l-.094.319c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.693-1.115l-.291.16c-.764.415-1.6-.42-1.184-1.185l.16-.291a1.873 1.873 0 0 0-1.115-2.693l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094a1.873 1.873 0 0 0 1.115-2.693l-.16-.291c-.415-.764.42-1.6 1.184-1.185l.291.16a1.873 1.873 0 0 0 2.693-1.115l.094-.319z"/>
+                </svg>
+                <span>Yönetici Girişi</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 2. HEADER KARTI: SOLDA RAPOR SONUÇLARI & "RAPORUM VAR" - SAĞDA HEMEN GİT & HEMEN ARA -->
+    <div class="card hero-card p-3 p-md-4 mb-4 shadow">
+        <div class="hero-action-container">
+            
+            <!-- SOL BÖLÜM: RAPOR SONUÇLARI VE "RAPORUM VAR" BUTONLARI -->
+            <div class="hero-btn-group-left">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'musteri_paneli' %}" class="btn btn-gold btn-sm fw-bold shadow-sm">
+                        Rapor Sonuçları →
+                    </a>
+                {% else %}
+                    <a href="{% url 'giris' %}" class="btn btn-gold btn-sm fw-bold shadow-sm">Giriş Yap →</a>
+                {% endif %}
+                
+                <!-- RAPORUM VAR (WHATSAPP OCAĞI AÇ BUTONU) -->
+                <button type="button" class="btn btn-ocak btn-sm shadow-sm" onclick="raporumVarGonder()" title="Hüseyin Bey'e doğrudan analiz bildirimi gönder">
+                    Raporum Var
+                </button>
+            </div>
+
+            <!-- SAĞ BÖLÜM: HEMEN GİT & HEMEN ARA -->
+            <div class="hero-btn-group-right">
+                <a href="https://www.google.com/maps/dir//Niz+Ayar+Evi,+%C5%9Eemsitebrizi,+%C4%B0stanbul+Cd.+Konalta%C5%9F+%C4%B0%C5%9F+Han%C4%B1+No:113,+42030+Karatay%2FKonya/@37.8700124,32.5033263,15z/data=!4m8!4m7!1m0!1m5!1m1!1s0x14d08573c2a34317:0x74e571b2d3cf11cc!2m2!1d32.5007863!2d37.8722878" 
+                   target="_blank" 
+                   class="btn btn-outline-secondary btn-sm text-warning small shadow-sm">
+                   📍 Hemen Git
+                </a>
+                <a href="tel:05364651286" 
+                   class="btn btn-outline-secondary btn-sm text-warning small shadow-sm">
+                   📞 Hemen Ara
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. ANA İÇERİK: WEBDE SOLDA TABLO SAĞDA MOTOR, MOBİLDE MOTOR EN ÜSTTE -->
+    <div class="row g-4">
+        
+        <!-- HESAPLAMA MOTORU: MOBİLDE İLK SIRADA (order-1), WEBDE SAĞDA (order-md-2) -->
+        <div class="col-lg-8 col-md-7 order-1 order-md-2">
+            <div class="card card-custom p-3 p-md-4 shadow-sm">
+                
+                <!-- SEKME BUTONLARI -->
+                <div class="d-flex gap-2 flex-wrap mb-4" id="hesapTabList">
+                    <button class="btn btn-tab active flex-fill flex-md-grow-0" type="button" onclick="sekmeGoster('tabYukseltme', this)">Ayar Yükseltme</button>
+                    <button class="btn btn-tab flex-fill flex-md-grow-0" type="button" onclick="sekmeGoster('tabDusurme', this)">Ayar Düşürme</button>
+                    <button class="btn btn-tab flex-fill flex-md-grow-0" type="button" onclick="sekmeGoster('tabTakoz', this)">Takoz Hesabı</button>
+                    <button class="btn btn-tab flex-fill flex-md-grow-0" type="button" onclick="sekmeGoster('tabKontrol', this)">Ayar Kontrol</button>
+                </div>
+
+                <!-- 1. SEKME: AYAR YÜKSELTME -->
+                <div id="tabYukseltme" class="hesap-pane">
+                    <h5 class="text-warning fw-bold mb-1">Ayar Yükseltme Hesabı</h5>
+                    <p class="text-secondary small mb-3">Mevcut altının ayarını has altın ekleyerek istenen hedef ayara yükseltir.</p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Mevcut Gramaj (gr):</label>
+                            <input type="number" step="0.01" inputmode="decimal" id="yukseltme_vg" class="form-control" placeholder="Örn: 100.00">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Mevcut Milyem (Ayar):</label>
+                            <input type="number" step="0.1" inputmode="decimal" id="yukseltme_vm" class="form-control" placeholder="Örn: 585">
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="small mb-0">İstenen Milyem (Hedef):</label>
+                                <div class="d-flex gap-1">
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('yukseltme_im', 585)">14A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('yukseltme_im', 750)">18A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('yukseltme_im', 916)">22A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('yukseltme_im', 995)">Has</span>
+                                </div>
+                            </div>
+                            <input type="number" step="0.1" inputmode="decimal" id="yukseltme_im" class="form-control" placeholder="Örn: 916">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Eklenen Has Milyemi:</label>
+                            <input type="number" step="0.1" inputmode="decimal" id="yukseltme_em" class="form-control" value="995" title="Değiştirmek için tıklayınız (Örn: 995, 999.9)">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="button" class="btn btn-gold flex-grow-1 py-2" onclick="hesaplaYukseltme()">Ayar Yükseltmeyi Hesapla</button>
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="temizleYukseltme()">Temizle</button>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="kaydet_yukseltme" checked>
+                            <label class="form-check-label small" for="kaydet_yukseltme">Bu işlem kayıt edilsin mi?</label>
+                        </div>
+                    {% endif %}
+
+                    <div id="sonuc_yukseltme" class="result-box mt-3" style="display:none;"></div>
+                </div>
+
+                <!-- 2. SEKME: AYAR DÜŞÜRME -->
+                <div id="tabDusurme" class="hesap-pane" style="display: none;">
+                    <h5 class="text-warning fw-bold mb-1">Ayar Düşürme Hesabı</h5>
+                    <p class="text-secondary small mb-3">Yüksek ayarlı altına alaşım (bakır/gümüş) katarak ayarını düşürür.</p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <div class="d-flex align-items-center mb-1" style="min-height: 22px;">
+                                <label class="small mb-0 text-nowrap">Mevcut Gramaj (gr):</label>
+                            </div>
+                            <input type="number" step="0.01" inputmode="decimal" id="dusurme_vg" class="form-control" placeholder="Örn: 100.00">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="d-flex align-items-center mb-1" style="min-height: 22px;">
+                                <label class="small mb-0 text-nowrap">Mevcut Milyem (Ayar):</label>
+                            </div>
+                            <input type="number" step="0.1" inputmode="decimal" id="dusurme_vm" class="form-control" placeholder="Örn: 916">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1" style="min-height: 22px;">
+                                <label class="small mb-0 text-nowrap">Hedef Milyem:</label>
+                                <div class="d-flex gap-1">
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('dusurme_im', 333)">8A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('dusurme_im', 585)">14A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('dusurme_im', 750)">18A</span>
+                                    <span class="quick-badge-btn" onclick="hizliMilyemSec('dusurme_im', 916)">22A</span>
+                                </div>
+                            </div>
+                            <input type="number" step="0.1" inputmode="decimal" id="dusurme_im" class="form-control" placeholder="Örn: 585">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="button" class="btn btn-gold flex-grow-1 py-2" onclick="hesaplaDusurme()">Ayar Düşürmeyi Hesapla</button>
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="temizleDusurme()">Temizle</button>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="kaydet_dusurme" checked>
+                            <label class="form-check-label small" for="kaydet_dusurme">Bu işlem kayıt edilsin mi?</label>
+                        </div>
+                    {% endif %}
+
+                    <div id="sonuc_dusurme" class="result-box mt-3" style="display:none;"></div>
+                </div>
+
+                <!-- 3. SEKME: TAKOZ HESABI -->
+                <div id="tabTakoz" class="hesap-pane" style="display: none;">
+                    <h5 class="text-warning fw-bold mb-1">Takoz Ayar Hesabı (Karışım / Eritme)</h5>
+                    <p class="text-secondary small mb-3">Farklı gramaj ve milyemdeki parçalar eritildiğinde oluşacak takozun ortalama milyemini ve ağırlığını hesaplar.</p>
+
+                    <!-- DESKTOP SÜTUN BAŞLIKLARI -->
+                    <div class="row g-2 mb-2 small fw-bold px-1 d-none d-md-flex" style="color: #cbd5e1;">
+                        <div class="col-md-4">Müşteri Adı</div>
+                        <div class="col-md-3">Gram</div>
+                        <div class="col-md-3">Milyem</div>
+                        <div class="col-md-2 text-center">Sil</div>
+                    </div>
+
+                    <!-- İÇTEN KAYDIRMA ALANI -->
+                    <div class="takoz-scroll-area" id="takozSatirlar">
+                        <!-- 1. Satır -->
+                        <div class="row g-2 mb-2 takoz-satir">
+                            <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="1. Müşteri (Örn: Niz)"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="1. Gram" oninput="takozKontrol(this)"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="1. Milyem" oninput="takozKontrol(this)"></div>
+                            <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                            </div>
+                        </div>
+                        <!-- 2. Satır -->
+                        <div class="row g-2 mb-2 takoz-satir">
+                            <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="2. Müşteri"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="2. Gram" oninput="takozKontrol(this)"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="2. Milyem" oninput="takozKontrol(this)"></div>
+                            <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                            </div>
+                        </div>
+                        <!-- 3. Satır -->
+                        <div class="row g-2 mb-2 takoz-satir">
+                            <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="3. Müşteri"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="3. Gram" oninput="takozKontrol(this)"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="3. Milyem" oninput="takozKontrol(this)"></div>
+                            <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                            </div>
+                        </div>
+                        <!-- 4. Satır -->
+                        <div class="row g-2 mb-2 takoz-satir">
+                            <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="4. Müşteri"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="4. Gram" oninput="takozKontrol(this)"></div>
+                            <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="4. Milyem" oninput="takozKontrol(this)"></div>
+                            <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AKSİYON BUTONLARI -->
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-gold flex-grow-1 py-2" onclick="hesaplaTakoz()">Takoz Ayarını Hesapla</button>
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="temizleTakoz()">Temizle</button>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="kaydet_takoz" checked>
+                            <label class="form-check-label small" for="kaydet_takoz">Bu işlem kayıt edilsin mi?</label>
+                        </div>
+                    {% endif %}
+
+                    <div id="sonuc_takoz" class="result-box mt-3" style="display:none;"></div>
+                </div>
+
+                <!-- 4. SEKME: AYAR KONTROL -->
+                <div id="tabKontrol" class="hesap-pane" style="display: none;">
+                    <h5 class="text-warning fw-bold mb-1">Ayar Kontrol Hesabı</h5>
+                    <p class="text-secondary small mb-3">Takozun toplam ağırlığı ve milyeminden içerisindeki net has altın miktarını hesaplar.</p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Toplam Takoz Ağırlığı (gr):</label>
+                            <input type="number" step="0.01" inputmode="decimal" id="kontrol_agirlik" class="form-control" placeholder="Örn: 250.00">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Ölçülen Milyem (Ayar):</label>
+                            <input type="number" step="0.1" inputmode="decimal" id="kontrol_milyem" class="form-control" placeholder="Örn: 914.5">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="button" class="btn btn-gold flex-grow-1 py-2" onclick="hesaplaKontrol()">Ayar Kontrolü Yap</button>
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="temizleKontrol()">Temizle</button>
+                    </div>
+
+                    <div id="sonuc_kontrol" class="result-box mt-3" style="display:none;"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HIZLI AYAR & MİLYEM TABLOSU: MOBİLDE MOTORUN ALTINDA (order-2), WEBDE SOLDA (order-md-1) -->
+        <div class="col-lg-4 col-md-5 order-2 order-md-1">
+            <div class="card card-custom p-4 shadow-sm h-100">
+                
+                <!-- BAŞLIK & YÖN DEĞİŞTİRME BUTONU -->
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h4 class="text-warning fw-bold mb-0">Ayar Hesapla</h4>
+                    <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2" style="font-size: 11px;" onclick="yonDegistirHizliAyar()">
+                        ⇄ <span id="hizli_yon_etiket">Milyem ➔ Ayar</span>
+                    </button>
+                </div>
+                <p class="text-secondary small mb-3" id="hizli_aciklama">Milyem değerini girerek ayar karşılığını hesaplayın.</p>
+
+                <!-- DEĞER GİRİŞİ -->
+                <div class="input-group mb-3">
+                    <input type="number" step="0.1" inputmode="decimal" id="hizli_deger" class="form-control" placeholder="Milyem (Örn: 916)">
+                    <button class="btn btn-gold px-3" type="button" onclick="hesaplaHizliAyar()">Hesapla</button>
+                </div>
+
+                <!-- AYAR SONUCU GÖSTERGE KUTUSU -->
+                <div class="text-center py-2 mb-4 rounded" style="background:#0d1524; border: 1px solid #2a384e;">
+                    <span class="text-secondary small d-block" id="hizli_sonuc_baslik">Ayar Sonucu</span>
+                    <strong class="fs-5 text-warning" id="hizli_ayar_sonuc">-</strong>
+                </div>
+
+                <!-- STANDART MİLYEM TABLOSU -->
+                <div class="table-responsive">
+                    <table class="table table-dark table-sm align-middle mb-0 text-center">
+                        <thead>
+                            <tr class="text-secondary small" style="border-bottom: 1px solid #334155;">
+                                <th class="py-2 text-start ps-3" style="color: #cbd5e1;">AYAR</th>
+                                <th class="py-2 text-end pe-3" style="color: #cbd5e1;">% STANDART MİLYEM</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            <tr><td class="text-start ps-3 py-2 text-white">8 Ayar</td><td class="text-end pe-3 py-2 text-warning fw-bold">333</td></tr>
+                            <tr><td class="text-start ps-3 py-2 text-white">14 Ayar</td><td class="text-end pe-3 py-2 text-warning fw-bold">585</td></tr>
+                            <tr><td class="text-start ps-3 py-2 text-white">18 Ayar</td><td class="text-end pe-3 py-2 text-warning fw-bold">750</td></tr>
+                            <tr><td class="text-start ps-3 py-2 text-white">22 Ayar</td><td class="text-end pe-3 py-2 text-warning fw-bold">916</td></tr>
+                            <tr><td class="text-start ps-3 py-2 text-white">24 Ayar</td><td class="text-end pe-3 py-2 text-warning fw-bold">995 / 999.9</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 4. FOOTER ALANI: 3 SÜTUNLU MODERN KURUMSAL DÜZEN & GOOGLE PUANLAMA KARTI -->
+    <footer class="mt-5 mb-3">
+        <div class="card card-custom p-4 shadow-sm">
+            <div class="row g-4 mb-4">
+                
+                <!-- SÜTUN 1: KURUMSAL, GİZLİLİK VE GOOGLE DEĞERLENDİRME -->
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="text-warning fw-bold mb-2">Niz Ayar Evi</h6>
+                    <div class="text-white small fw-semibold mb-1">Hüseyin Yeyğel</div>
+                    <div class="text-secondary small mb-2" style="font-size: 12px;">Değerli Madenler Analiz Laboratuvarı</div>
+                    <p class="text-secondary small mb-3" style="font-size: 11.5px; line-height: 1.6;">
+                        Analiz sonuçları ve firma kayıtları ticari gizlilik ilkeleri doğrultusunda korunmakta olup kesinlikle üçüncü şahıslarla paylaşılmaz.
+                    </p>
+
+                    <!-- GOOGLE PUANLAMA KARTI -->
+                    <a href="https://www.google.com/maps/place/Niz+Ayar+Evi/@37.8722878,32.5007863,17z/data=!4m6!3m5!1s0x14d08573c2a34317:0x74e571b2d3cf11cc!8m2!3d37.8722878!4d32.5007863!16s%2Fg%2F11nr1hh4_c?entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="google-review-card shadow-sm" title="Google'da Niz Ayar Evi'ne 5 Yıldız Verin">
+                        <div>
+                            <span class="text-white small fw-bold d-block" style="font-size: 12px;">Google'da Bizi Değerlendirin</span>
+                            <span class="star-gold">★★★★★</span> <span class="text-secondary small" style="font-size: 11px;">(5.0 Puan Ver)</span>
+                        </div>
+                        <span class="text-warning fw-bold" style="font-size: 18px;">➔</span>
+                    </a>
+                </div>
+
+                <!-- SÜTUN 2: ÇALIŞMA SAATLERİ -->
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="text-warning fw-bold mb-2">Çalışma Saatleri</h6>
+                    <ul class="list-unstyled small text-secondary mb-0" style="font-size: 12.5px; line-height: 2;">
+                        <li class="d-flex justify-content-between border-bottom border-dark pb-1 mb-1">
+                            <span class="text-light">Hafta İçi:</span>
+                            <span class="text-warning fw-bold">08.30 – 18.00</span>
+                        </li>
+                        <li class="d-flex justify-content-between border-bottom border-dark pb-1 mb-1">
+                            <span class="text-light">Cumartesi:</span>
+                            <span class="text-warning fw-bold">08.30 – 16.30</span>
+                        </li>
+                        <li class="d-flex justify-content-between pt-1">
+                            <span class="text-light">Pazar:</span>
+                            <span class="badge border border-danger text-danger" style="background: rgba(239, 68, 68, 0.1);">Kapalı</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- SÜTUN 3: İLETİŞİM, ULAŞIM & GELİŞTİRİCİYE ÖNERİ -->
+                <div class="col-lg-4 col-12">
+                    <h6 class="text-warning fw-bold mb-2">İletişim & Ulaşım</h6>
+                    <div class="text-secondary small mb-1" style="font-size: 12px;">
+                        📍 Şemsi Tebrizi Mh. Konaltaş İşh. Kat:1 No:113 Karatay / KONYA
+                    </div>
+                    <div class="text-secondary small mb-3" style="font-size: 12px;">
+                        📞 İletişim: <a href="tel:05364651286" class="text-warning text-decoration-none fw-bold">0536 465 12 86</a>
+                    </div>
+                    <div>
+                        <span class="text-secondary small d-block mb-1.5" style="font-size: 11.5px;">Geliştiriciye istek ve öneride bulunmak için:</span>
+                        <button type="button" class="btn btn-whatsapp d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2 shadow w-100" onclick="whatsappGonder()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/>
+                              <path d="M11.516 9.878c-.194-.097-1.148-.567-1.326-.632-.178-.065-.308-.097-.437.097-.13.194-.502.632-.615.762-.113.13-.227.146-.42.049-.194-.097-.82-.302-1.562-.964-.576-.514-.965-1.15-1.078-1.344-.113-.194-.012-.3.085-.397.088-.087.194-.227.291-.341.097-.113.13-.194.194-.324.065-.13.032-.243-.016-.341-.049-.097-.437-1.054-.6-1.445-.158-.38-.32-.328-.437-.334l-.373-.006c-.13 0-.34.049-.518.243-.178.194-.68.665-.68 1.621 0 .956.696 1.88 1.792 1.88.097 0 .194-.01.291-.02.437.195.96.388 1.488.54.453.13.91.194 1.36.194.55 0 1.09-.097 1.58-.291.68-.27 1.11-.89 1.11-1.621 0-.178-.032-.341-.097-.47-.065-.13-.178-.227-.373-.324z"/>
+                            </svg>
+                            WhatsApp ile İletişim
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ALT ÇİZGİ / KURUMSAL TELİF HAKKI -->
+            <div class="pt-3 border-top border-secondary text-center text-secondary" style="font-size: 11.5px;">
+                © 2026 Niz Ayar Evi. Tüm hakları saklıdır.
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- 5. KAYAN BİLGİLENDİRME BANDI -->
+<div class="ticker-bar">
+    <div class="ticker-content">
+        Sitemizdeki sonuçlar yalnızca bilgilendirme amacıyla hazırlanmış olup resmi bir geçerliliği bulunmamaktadır. Raporun aslı Niz Ayar Evi'nden fiziki olarak teslim alınmalıdır. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sitemizdeki sonuçlar yalnızca bilgilendirme amacıyla hazırlanmış olup resmi bir geçerliliği bulunmamaktadır. Raporun aslı Niz Ayar Evi'nden fiziki olarak teslim alınmalıdır.
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function getCsrfToken() {
+        var el = document.querySelector('[name=csrfmiddlewaretoken]');
+        return el ? el.value : '';
+    }
+
+    // 1. "RAPORUM VAR" BUTONU (HÜSEYİN BEY'E DOĞRUDAN OCAĞI AÇ BİLDİRİMİ)
+    function raporumVarGonder() {
+        var mesaj = "Abi rapor göndereceğim. Ocağı açar mısın?";
+        var url = "https://wa.me/905364651286?text=" + encodeURIComponent(mesaj);
+        window.open(url, '_blank');
+    }
+
+    // 2. GELİŞTİRİCİYE ÖNERİ WHATSAPP DİNAMİK YÖNLENDİRME (KUBİLAY NUMARASINA)
+    function whatsappGonder() {
+        var firmaAdi = "{% if user.is_authenticated and user.profil.firma_adi %}{{ user.profil.firma_adi }}{% elif user.is_authenticated %}{{ user.username }}{% else %}{% endif %}";
+        var mesaj = "";
+        if (firmaAdi && firmaAdi.trim() !== "") {
+            mesaj = "Merhaba Kubilay, ben " + firmaAdi + " Geliştirdiğin web siteni çok beğendim :) Daha da geliştirmek için sana birkaç tavsiyem var.";
+        } else {
+            mesaj = "Merhaba Kubilay, Geliştirdiğin web siteni çok beğendim :) Daha da geliştirmek için sana birkaç tavsiyem var.";
+        }
+        var url = "https://wa.me/905396966411?text=" + encodeURIComponent(mesaj);
+        window.open(url, '_blank');
+    }
+
+    // SEKME DEĞİŞTİRİCİ
+    function sekmeGoster(paneId, btn) {
+        document.querySelectorAll('.hesap-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('#hesapTabList .btn-tab').forEach(b => b.classList.remove('active'));
+        document.getElementById(paneId).style.display = 'block';
+        btn.classList.add('active');
+    }
+
+    // HIZLI MİLYEM DEĞERİ DOLDURMA
+    function hizliMilyemSec(inputId, val) {
+        var el = document.getElementById(inputId);
+        if (el) {
+            el.value = val;
+            el.focus();
+        }
+    }
+
+    // ENTER TUŞU YÖNETİMİ
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            if (document.activeElement && document.activeElement.classList.contains('takoz-input')) {
+                e.preventDefault();
+                var allInputs = Array.from(document.querySelectorAll('#takozSatirlar .takoz-input'));
+                var idx = allInputs.indexOf(document.activeElement);
+                if (idx > -1 && idx < allInputs.length - 1) {
+                    allInputs[idx + 1].focus();
+                } else if (idx === allInputs.length - 1) {
+                    takozYeniSatirEkle();
+                    setTimeout(() => {
+                        var updatedInputs = Array.from(document.querySelectorAll('#takozSatirlar .takoz-input'));
+                        if (updatedInputs[idx + 1]) updatedInputs[idx + 1].focus();
+                    }, 40);
+                }
+                return;
+            }
+
+            if (document.activeElement && document.activeElement.id === 'hizli_deger') {
+                e.preventDefault();
+                hesaplaHizliAyar();
+                return;
+            }
+
+            var panes = document.querySelectorAll('.hesap-pane');
+            panes.forEach(function(pane) {
+                if (pane.style.display !== 'none') {
+                    if (pane.id === 'tabYukseltme') { e.preventDefault(); hesaplaYukseltme(); }
+                    else if (pane.id === 'tabDusurme') { e.preventDefault(); hesaplaDusurme(); }
+                    else if (pane.id === 'tabKontrol') { e.preventDefault(); hesaplaKontrol(); }
+                }
+            });
+        }
+    });
+
+    // 0. SOL TARAF: ÇİFT YÖNLÜ HIZLI AYAR HESAPLA
+    var hizliAyarModu = 'milyem_to_ayar';
+
+    function yonDegistirHizliAyar() {
+        var input = document.getElementById('hizli_deger');
+        var etiket = document.getElementById('hizli_yon_etiket');
+        var aciklama = document.getElementById('hizli_aciklama');
+        var sonucBaslik = document.getElementById('hizli_sonuc_baslik');
+        var sonuc = document.getElementById('hizli_ayar_sonuc');
+
+        if (hizliAyarModu === 'milyem_to_ayar') {
+            hizliAyarModu = 'ayar_to_milyem';
+            etiket.innerText = 'Ayar ➔ Milyem';
+            aciklama.innerText = 'Ayar değerini girerek milyem karşılığını hesaplayın.';
+            input.placeholder = 'Ayar (Örn: 22 veya 14)';
+            sonucBaslik.innerText = 'Milyem Karşılığı';
+        } else {
+            hizliAyarModu = 'milyem_to_ayar';
+            etiket.innerText = 'Milyem ➔ Ayar';
+            aciklama.innerText = 'Milyem değerini girerek ayar karşılığını hesaplayın.';
+            input.placeholder = 'Milyem (Örn: 916)';
+            sonucBaslik.innerText = 'Ayar Karşılığı';
+        }
+        input.value = '';
+        sonuc.innerText = '-';
+        input.focus();
+    }
+
+    function hesaplaHizliAyar() {
+        var v = parseFloat(document.getElementById('hizli_deger').value);
+        if (!v || v <= 0) { alert("Lütfen geçerli bir değer giriniz."); return; }
+
+        if (hizliAyarModu === 'milyem_to_ayar') {
+            var ayar = (v / 1000) * 24;
+            document.getElementById('hizli_ayar_sonuc').innerText = ayar.toFixed(2) + " Ayar";
+        } else {
+            var mil = (v / 24) * 1000;
+            document.getElementById('hizli_ayar_sonuc').innerText = mil.toFixed(1) + " Milyem";
+        }
+    }
+
+    // 1. AYAR YÜKSELTME
+    function hesaplaYukseltme() {
+        var vg = parseFloat(document.getElementById('yukseltme_vg').value);
+        var vm = parseFloat(document.getElementById('yukseltme_vm').value);
+        var im = parseFloat(document.getElementById('yukseltme_im').value);
+        var em = parseFloat(document.getElementById('yukseltme_em').value) || 995;
+
+        if (!vg || !vm || !im) { alert("Lütfen tüm alanları doldurunuz."); return; }
+        if (im <= vm) { alert("İstenen milyem, mevcut milyemden büyük olmalıdır (Ayar Yükseltme)."); return; }
+        if (im >= em) { alert("İstenen milyem, eklenen has milyeminden (" + em + ") küçük olmalıdır."); return; }
+
+        var has = ((im - vm) * vg) / (em - im);
+        var top = vg + has;
+
+        var box = document.getElementById('sonuc_yukseltme');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <h6 class="text-warning mb-2 fw-bold">Hesaplama Sonucu:</h6>
+            <p class="mb-1" style="color: #cbd5e1 !important;">İlave Edilecek Has (${em}): <strong class="text-white fs-5">+${has.toFixed(2)} gr</strong></p>
+            <p class="mb-0" style="color: #94a3b8 !important;">Elde Edilecek Toplam Ağırlık: <strong class="text-white">${top.toFixed(2)} gr</strong> (${im} Milyem)</p>
+        `;
+
+        var kaydetCheck = document.getElementById('kaydet_yukseltme');
+        if (kaydetCheck && kaydetCheck.checked) {
+            var detay = `${vg.toFixed(2)} gr (${vm} Milyem) → ${im} Milyeme Yükseltme (Eklenen Has: ${em})`;
+            var sonuc = `+${has.toFixed(2)} gr Has (${em}) • Toplam: ${top.toFixed(2)} gr`;
+            islemKaydetAjax("Ayar Yükseltme", detay, sonuc);
+        }
+    }
+    function temizleYukseltme() {
+        document.getElementById('yukseltme_vg').value = '';
+        document.getElementById('yukseltme_vm').value = '';
+        document.getElementById('yukseltme_im').value = '';
+        document.getElementById('yukseltme_em').value = '995';
+        document.getElementById('sonuc_yukseltme').style.display = 'none';
+    }
+
+    // 2. AYAR DÜŞÜRME
+    function hesaplaDusurme() {
+        var vg = parseFloat(document.getElementById('dusurme_vg').value);
+        var vm = parseFloat(document.getElementById('dusurme_vm').value);
+        var im = parseFloat(document.getElementById('dusurme_im').value);
+
+        if (!vg || !vm || !im) { alert("Lütfen tüm alanları doldurunuz."); return; }
+        if (im >= vm) { alert("İstenen milyem, mevcut milyemden küçük olmalıdır (Ayar Düşürme)."); return; }
+
+        var top = (vg * vm) / im;
+        var alloy = top - vg;
+
+        var box = document.getElementById('sonuc_dusurme');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <h6 class="text-warning mb-2 fw-bold">Hesaplama Sonucu:</h6>
+            <p class="mb-1" style="color: #cbd5e1 !important;">İlave Edilecek Alaşım (Bakır/Gümüş): <strong class="text-white fs-5">+${alloy.toFixed(2)} gr</strong></p>
+            <p class="mb-0" style="color: #94a3b8 !important;">Elde Edilecek Toplam Ağırlık: <strong class="text-white">${top.toFixed(2)} gr</strong> (${im} Milyem)</p>
+        `;
+
+        var kaydetCheck = document.getElementById('kaydet_dusurme');
+        if (kaydetCheck && kaydetCheck.checked) {
+            var detay = `${vg.toFixed(2)} gr (${vm} Milyem) → ${im} Milyeme Düşürme`;
+            var sonuc = `+${alloy.toFixed(2)} gr Alaşım • Toplam: ${top.toFixed(2)} gr`;
+            islemKaydetAjax("Ayar Düşürme", detay, sonuc);
+        }
+    }
+    function temizleDusurme() {
+        document.getElementById('dusurme_vg').value = '';
+        document.getElementById('dusurme_vm').value = '';
+        document.getElementById('dusurme_im').value = '';
+        document.getElementById('sonuc_dusurme').style.display = 'none';
+    }
+
+    // 3. TAKOZ HESABI: MOBİL & WEB UYUMLU SATIR YAPISI
+    function takozKontrol(elem) {
+        var row = elem.closest('.takoz-satir');
+        var container = document.getElementById('takozSatirlar');
+        var rows = container.querySelectorAll('.takoz-satir');
+        var isLast = (row === rows[rows.length - 1]);
+
+        if (isLast) {
+            var gr = row.querySelector('.takoz-gram').value;
+            var mil = row.querySelector('.takoz-milyem').value;
+            if (gr.trim() !== '' || mil.trim() !== '') {
+                takozYeniSatirEkle();
+            }
+        }
+    }
+
+    function takozYeniSatirEkle() {
+        var container = document.getElementById('takozSatirlar');
+        var count = container.querySelectorAll('.takoz-satir').length + 1;
+        var rowDiv = document.createElement('div');
+        rowDiv.className = 'row g-2 mb-2 takoz-satir';
+        rowDiv.innerHTML = `
+            <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="${count}. Müşteri"></div>
+            <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="${count}. Gram" oninput="takozKontrol(this)"></div>
+            <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="${count}. Milyem" oninput="takozKontrol(this)"></div>
+            <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+            </div>
+        `;
+        container.appendChild(rowDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function takozSatirSil(btn) {
+        var row = btn.closest('.takoz-satir');
+        var container = document.getElementById('takozSatirlar');
+        var rows = container.querySelectorAll('.takoz-satir');
+        if (rows.length <= 1) {
+            row.querySelector('.takoz-musteri').value = '';
+            row.querySelector('.takoz-gram').value = '';
+            row.querySelector('.takoz-milyem').value = '';
+            return;
+        }
+        row.remove();
+        takozNumaralariGuncelle();
+    }
+
+    function takozNumaralariGuncelle() {
+        var rows = document.querySelectorAll('#takozSatirlar .takoz-satir');
+        rows.forEach((r, idx) => {
+            var n = idx + 1;
+            var mInput = r.querySelector('.takoz-musteri');
+            var gInput = r.querySelector('.takoz-gram');
+            var milInput = r.querySelector('.takoz-milyem');
+            if (mInput && mInput.placeholder.includes('Müşteri')) mInput.placeholder = n + '. Müşteri';
+            if (gInput && gInput.placeholder.includes('Gram')) gInput.placeholder = n + '. Gram';
+            if (milInput && milInput.placeholder.includes('Milyem')) milInput.placeholder = n + '. Milyem';
+        });
+    }
+
+    function temizleTakoz() {
+        var container = document.getElementById('takozSatirlar');
+        container.innerHTML = `
+            <div class="row g-2 mb-2 takoz-satir">
+                <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="1. Müşteri (Örn: Niz)"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="1. Gram" oninput="takozKontrol(this)"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="1. Milyem" oninput="takozKontrol(this)"></div>
+                <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                </div>
+            </div>
+            <div class="row g-2 mb-2 takoz-satir">
+                <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="2. Müşteri"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="2. Gram" oninput="takozKontrol(this)"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="2. Milyem" oninput="takozKontrol(this)"></div>
+                <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                </div>
+            </div>
+            <div class="row g-2 mb-2 takoz-satir">
+                <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="3. Müşteri"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="3. Gram" oninput="takozKontrol(this)"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="3. Milyem" oninput="takozKontrol(this)"></div>
+                <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                </div>
+            </div>
+            <div class="row g-2 mb-2 takoz-satir">
+                <div class="col-12 col-md-4"><input type="text" class="form-control takoz-input takoz-musteri" placeholder="4. Müşteri"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.01" inputmode="decimal" class="form-control takoz-input takoz-gram" placeholder="4. Gram" oninput="takozKontrol(this)"></div>
+                <div class="col-5 col-md-3"><input type="number" step="0.1" inputmode="decimal" class="form-control takoz-input takoz-milyem" placeholder="4. Milyem" oninput="takozKontrol(this)"></div>
+                <div class="col-2 col-md-2 d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1" onclick="takozSatirSil(this)" title="Satırı Sil">✕</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('sonuc_takoz').style.display = 'none';
+    }
+
+    function hesaplaTakoz() {
+        var satirlar = document.querySelectorAll('.takoz-satir');
+        var topGr = 0;
+        var topHas = 0;
+        var parca = 0;
+        var detayParcalari = [];
+
+        satirlar.forEach(function(r) {
+            var musteri = r.querySelector('.takoz-musteri').value.trim();
+            var gr = parseFloat(r.querySelector('.takoz-gram').value) || 0;
+            var mil = parseFloat(r.querySelector('.takoz-milyem').value) || 0;
+            if (gr > 0 && mil > 0) {
+                topGr += gr;
+                topHas += (gr * mil) / 1000;
+                parca++;
+                var isimEtiketi = musteri ? musteri : (parca + '. Parça');
+                detayParcalari.push(`${isimEtiketi}: ${gr.toFixed(2)} gr (${mil} Mil)`);
+            }
+        });
+
+        if (parca === 0) { alert("Lütfen en az 1 satır geçerli gram ve milyem giriniz."); return; }
+
+        var ortMilyem = (topHas / topGr) * 1000;
+        var box = document.getElementById('sonuc_takoz');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <h6 class="text-warning mb-2 fw-bold">Takoz Analiz Özeti:</h6>
+            <div class="row g-2">
+                <div class="col-4"><span class="small d-block" style="color: #94a3b8 !important;">Eritilen Parça:</span><strong class="text-white">${parca} Kalem</strong></div>
+                <div class="col-4"><span class="small d-block" style="color: #94a3b8 !important;">Toplam Takoz:</span><strong class="text-white">${topGr.toFixed(2)} gr</strong></div>
+                <div class="col-4"><span class="small d-block" style="color: #94a3b8 !important;">Ortalama Ayar:</span><strong class="text-warning fs-5">${ortMilyem.toFixed(1)} Mil</strong></div>
+            </div>
+            <div class="mt-2 pt-2 border-top border-secondary small" style="color: #cbd5e1 !important;">
+                Net Has Karşılığı: <strong class="text-white">${topHas.toFixed(2)} gr Has Altın</strong>
+            </div>
+        `;
+
+        var kaydetCheck = document.getElementById('kaydet_takoz');
+        if (kaydetCheck && kaydetCheck.checked) {
+            var detay = `${parca} Kalem [${detayParcalari.join(', ')}] • Toplam Takoz: ${topGr.toFixed(2)} gr`;
+            var sonuc = `Ortalama: ${ortMilyem.toFixed(1)} Milyem • Has: ${topHas.toFixed(2)} gr`;
+            islemKaydetAjax("Takoz Hesabı", detay, sonuc);
+        }
+    }
+
+    // 4. AYAR KONTROL
+    function hesaplaKontrol() {
+        var ag = parseFloat(document.getElementById('kontrol_agirlik').value);
+        var mil = parseFloat(document.getElementById('kontrol_milyem').value);
+        if (!ag || !mil) { alert("Lütfen ağırlık ve milyem giriniz."); return; }
+
+        var netHas = (ag * mil) / 1000;
+        var box = document.getElementById('sonuc_kontrol');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <h6 class="text-warning mb-2 fw-bold">Kontrol Özeti:</h6>
+            <p class="mb-1" style="color: #cbd5e1 !important;">Net Has Miktarı: <strong class="text-warning fs-5">${netHas.toFixed(2)} gr Has</strong></p>
+            <p class="mb-0" style="color: #94a3b8 !important;">Bakır / Katkı Payı: <strong class="text-white">${(ag - netHas).toFixed(2)} gr</strong></p>
+        `;
+    }
+    function temizleKontrol() {
+        document.getElementById('kontrol_agirlik').value = '';
+        document.getElementById('kontrol_milyem').value = '';
+        document.getElementById('sonuc_kontrol').style.display = 'none';
+    }
+
+    // AJAX KAYIT
+    function islemKaydetAjax(tur, detay, sonuc) {
+        fetch('/islem-kaydet/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+            body: JSON.stringify({ islem_turu: tur, detay: detay, sonuc: sonuc })
+        }).catch(err => console.log('Kayıt yapıldı.'));
+    }
+</script>
+
+</body>
+</html>

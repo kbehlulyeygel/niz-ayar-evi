@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+    @font-face {
+        font-family: 'NizFont';
+        src: url('{{ font_regular }}');
+    }
+    @font-face {
+        font-family: 'NizFont';
+        src: url('{{ font_bold }}');
+        font-weight: bold;
+    }
+
+    @page {
+        size: a5 landscape;
+        margin: 7mm 12mm 5mm 12mm;
+        background-color: #9bbcd0;
+    }
+
+    body {
+        font-family: 'NizFont', Arial, sans-serif;
+        color: #000000;
+        background-color: #9bbcd0;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    /* ÜST BAŞLIK TABLOSU */
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2px;
+    }
+    .left-contact {
+        width: 33%;
+        vertical-align: top;
+        text-align: left;
+        font-size: 10px;
+        line-height: 1.35;
+    }
+    .center-logo {
+        width: 34%;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .right-meta {
+        width: 33%;
+        vertical-align: top;
+        text-align: right;
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    /* KALIN AYIRICI ÇİZGİ */
+    .divider-line {
+        border-bottom: 3.5px solid #000000;
+        margin-top: 4px;
+        margin-bottom: 14px;
+    }
+
+    /* NUMUNE VE MÜŞTERİ BİLGİ ALANI */
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 14px;
+        font-size: 12.5px;
+    }
+    .info-table td {
+        padding: 5px 0;
+    }
+
+    /* SONUÇ TABLOSU (ÇERÇEVELİ) */
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #000000;
+        margin-bottom: 20px;
+    }
+    .result-table th {
+        border: 1px solid #000000;
+        padding: 7px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    .result-table td {
+        border: 1px solid #000000;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* DİPNOT */
+    .note-text {
+        font-size: 9px;
+        line-height: 1.4;
+        color: #111111;
+    }
+</style>
+</head>
+<body>
+
+<!-- 1. ÜST BİLGİ ALANI: İLETİŞİM, BÜYÜTÜLMÜŞ LOGO VE RAPOR/TARİH -->
+<table class="header-table">
+    <tr>
+        <td class="left-contact">
+            <strong style="font-size: 13px; font-weight: bold;">HÜSEYİN YEYĞEL</strong><br>
+            <strong style="font-size: 11px;">Tel: 0536 465 12 86</strong><br>
+            <span style="font-size: 9.5px;">Şemsi Tebrizi Mh. Konaltaş İşh. Kat:1 No:113<br>Karatay/KONYA</span>
+        </td>
+        <td class="center-logo">
+            <img src="{{ logo_path }}" width="175" style="width: 175px;" alt="Niz Ayar Evi">
+        </td>
+        <td class="right-meta">
+            <strong>RAPOR NO:</strong> <span style="font-size: 13px; font-weight: bold; margin-left: 6px;">{{ rapor.rapor_no }}</span><br>
+            <strong>TARİH:</strong> <span style="font-size: 12px; font-weight: bold; margin-left: 6px;">{{ rapor.tarih|date:"d.m.Y" }}</span>
+        </td>
+    </tr>
+</table>
+
+<!-- 2. KALIN SİYAH ÇİZGİ -->
+<div class="divider-line"></div>
+
+<!-- 3. MÜŞTERİ VE NUMUNE ALANLARI -->
+<table class="info-table">
+    <tr>
+        <td colspan="2">
+            <strong>Adı ve Soyadı / Firma:</strong>
+            &nbsp;&nbsp;<span style="font-weight: bold;">{{ rapor.musteri.firma_adi }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <strong>Analizin Cinsi:</strong>
+            &nbsp;&nbsp;<span>{{ rapor.analiz_cinsi }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 50%;">
+            <strong>Takoz Ağırlığı:</strong>
+            &nbsp;&nbsp;<span>{{ rapor.takoz_agirligi }} gr</span>
+        </td>
+        <td style="width: 50%;">
+            <strong>Alınan Çeşni Ağırlığı:</strong>
+            &nbsp;&nbsp;<span>{{ rapor.cesni_agirligi }} gr</span>
+        </td>
+    </tr>
+</table>
+
+<!-- 4. ANALİZ SONUÇ TABLOSU (TEK PARÇA BİLYEM DEĞERLERİ) -->
+<table class="result-table">
+    <thead>
+        <tr>
+            <th style="width: 50%;">Altın (Binde)</th>
+            <th style="width: 50%;">Gümüş (Binde)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-size: 24px; font-weight: bold; height: 60px;">
+                {{ rapor.altin_binde }}
+            </td>
+            <td style="font-size: 24px; font-weight: bold; height: 60px;">
+                {{ rapor.gumus_binde }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- 5. ALT BİLGİLENDİRME NOTU -->
+<div class="note-text">
+    NOT: İşbu analiz raporu yalnızca bilgilendirme amacıyla hazırlanmış olup resmi bir geçerliliği bulunmamaktadır.<br>
+    Raporun aslı Niz Ayar Evi'nden fiziki olarak teslim alınmalıdır.
+</div>
+
+</body>
+</html>

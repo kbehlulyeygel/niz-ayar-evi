@@ -1,0 +1,776 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ profil.firma_adi }} - Niz Ayar Evi Portalı</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+<style>
+    body { background-color: #0b1120; color: #f1f5f9; font-family: system-ui, sans-serif; padding-bottom: 55px; }
+    .navbar { background-color: #111827; border-bottom: 1px solid #1f2937; }
+    .card-custom { background-color: #1f2937; border: 1px solid #374151; border-radius: 14px; }
+    .badge-gold { background-color: #d4af37; color: #000; font-weight: 700; font-size: 1.05rem; }
+    .table-dark { --bs-table-bg: #1f2937; --bs-table-border-color: #374151; }
+    
+    .navbar-logo { max-height: 55px; width: auto; filter: invert(74%) sepia(42%) saturate(942%) hue-rotate(359deg) brightness(91%) contrast(89%); }
+
+    /* AKSİYON BUTONLARI */
+    .btn-action-view, .btn-action-download {
+        background-color: #1e293b; border: 1px solid #475569; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; text-decoration: none; cursor: pointer; font-size: 12px;
+    }
+    .btn-action-view { color: #38bdf8; }
+    .btn-action-view:hover { background-color: #0284c7; color: #ffffff; }
+    .btn-action-download { color: #facc15; }
+    .btn-action-download:hover { background-color: #d4af37; color: #000000; }
+
+    .search-input-compact {
+        background-color: #0f172a; border: 1px solid #334155; color: #ffffff; font-size: 12.5px; border-radius: 8px; padding: 6px 12px; width: 185px;
+    }
+    .search-input-compact:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25); }
+
+    /* İKİ ANA SEKME BAŞLIĞI */
+    .nav-tabs-custom { display: flex; gap: 8px; border-bottom: 2px solid #374151; margin-bottom: 20px; }
+    .nav-tab-custom-btn {
+        background: transparent; border: none; border-bottom: 3px solid transparent; color: #94a3b8; font-weight: 600; font-size: 15px; padding: 10px 18px; cursor: pointer; transition: all 0.2s;
+    }
+    .nav-tab-custom-btn:hover { color: #f8fafc; }
+    .nav-tab-custom-btn.active { color: #d4af37; border-bottom-color: #d4af37; }
+
+    .filter-btn { background-color: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12.5px; padding: 6px 13px; }
+    .filter-btn:hover { color: #f8fafc; border-color: #64748b; }
+    .filter-btn.active { background-color: #d4af37; border-color: #d4af37; color: #000000; font-weight: 700; }
+    .filter-btn.calendar-btn { color: #d4af37; }
+
+    .btn-clear { background-color: transparent; border: 1px solid #334155; color: #94a3b8; font-size: 12.5px; border-radius: 8px; padding: 6px 13px; }
+    .btn-clear:hover { color: #ffffff; border-color: #64748b; background-color: #1e293b; }
+
+    .dropdown-filter { background-color: #0f172a; border: 1px solid #334155; color: #facc15; font-size: 12.5px; font-weight: 500; border-radius: 8px; padding: 6px 12px; outline: none; }
+
+    /* EKRANIN EN ÜSTÜNDEKİ KÜMÜLATİF TOPLAM BİLANÇO KARTI */
+    .summary-card-custom {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid #d4af37;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 22px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .pagination-custom { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 24px; }
+    .pagination-custom button {
+        background-color: #0f172a; border: 1px solid #334155; color: #cbd5e1; font-size: 12.5px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    }
+    .pagination-custom button:hover:not(:disabled) { border-color: #d4af37; color: #ffffff; }
+    .pagination-custom button.active { background-color: #d4af37; border-color: #d4af37; color: #000000; }
+    .pagination-custom button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .ticker-bar {
+        position: fixed; bottom: 0; left: 0; width: 100%; background-color: #0b1120; border-top: 1px solid #b38e44; color: #e2e8f0; overflow: hidden; white-space: nowrap; z-index: 9999; padding: 7px 0; font-size: 12px;
+    }
+    .ticker-content { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerAnimation 55s linear infinite; }
+    @keyframes tickerAnimation { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+    /* ONAY KUTUCUĞU STİLİ */
+    .islem-chk, #tumunuSecIslem {
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+        accent-color: #d4af37;
+    }
+
+    /* KONTROL EDİLDİ ROZETİ */
+    .badge-kontrol {
+        background-color: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid #22c55e;
+        font-size: 11px;
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="{% url 'anasayfa' %}" class="d-flex align-items-center text-decoration-none" title="Ana Sayfaya Dön">
+            <img src="{% static 'images/logo.png' %}" alt="Niz Ayar Evi" class="navbar-logo">
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-light small d-none d-sm-inline"><strong>{{ profil.firma_adi }}</strong></span>
+            <a href="{% url 'cikis' %}" class="btn btn-sm btn-outline-danger">Çıkış Yap</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <!-- EN SON ANALİZ RAPORU -->
+    <div class="card card-custom p-4 mb-4 border-warning shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h5 class="text-warning mb-0">En Son Analiz Raporunuz</h5>
+            {% if son_rapor %}
+                <div class="d-flex gap-2">
+                    <a href="{% url 'rapor_pdf_indir' son_rapor.id %}?goruntule=1" target="_blank" class="btn btn-sm btn-action-view gap-1">Görüntüle</a>
+                    <a href="{% url 'rapor_pdf_indir' son_rapor.id %}" class="btn btn-sm btn-action-download gap-1">PDF İndir</a>
+                </div>
+            {% endif %}
+        </div>
+        {% if son_rapor %}
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-3 col-6"><span class="text-secondary small d-block">Rapor No / Tarih</span><strong class="text-white">{{ son_rapor.rapor_no }}</strong> <span class="text-secondary">({{ son_rapor.tarih|date:"d.m.Y" }})</span></div>
+                <div class="col-lg-2 col-6"><span class="text-secondary small d-block">Analiz Cinsi</span><span class="text-white">{{ son_rapor.analiz_cinsi }}</span></div>
+                <div class="col-lg-3 col-12"><span class="text-secondary small d-block">Takoz / Çeşni</span><span class="text-white fw-bold">{{ son_rapor.takoz_agirligi|floatformat:2 }} gr / {{ son_rapor.cesni_agirligi|floatformat:2 }} gr</span></div>
+                <div class="col-lg-2 col-6"><span class="text-secondary small d-block">Altın Sonucu</span><span class="badge badge-gold px-3 py-1">{{ son_rapor.altin_binde|floatformat:1 }} Binde</span></div>
+                <div class="col-lg-2 col-6"><span class="text-secondary small d-block">Gümüş Sonucu</span><span class="badge badge-gold px-3 py-1">{{ son_rapor.gumus_binde|floatformat:1 }} Binde</span></div>
+            </div>
+        {% else %}
+            <p class="text-secondary mb-0">Henüz adınıza kayıtlı bir analiz raporu bulunmamaktadır.</p>
+        {% endif %}
+    </div>
+
+    <!-- 2 ANA SEKME BAŞLIĞI -->
+    <div class="nav-tabs-custom">
+        <button type="button" class="nav-tab-custom-btn active" onclick="anaSekmeDegistir('sekmeRaporlar', this)">
+            Geçmiş Raporlarım
+        </button>
+        <button type="button" class="nav-tab-custom-btn" onclick="anaSekmeDegistir('sekmeIslemler', this)">
+            ⚙ Geçmiş İşlemlerim (Hesaplamalar)
+        </button>
+    </div>
+
+    <!-- 1. SEKME: GEÇMİŞ RAPORLARIM -->
+    <div id="sekmeRaporlar" class="ana-sekme-pane card card-custom p-4 mb-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div>
+                <h5 class="text-white mb-0">Geçmiş Raporlarım</h5>
+                <span class="text-secondary small" id="raporSayac">Yükleniyor...</span>
+            </div>
+            <div class="d-flex align-items-center flex-wrap gap-2 w-100 w-md-auto">
+                <input type="text" id="raporAramaInput" class="search-input-compact flex-fill flex-md-grow-0" placeholder="Rapor No ile ara">
+                <div class="btn-group btn-group-sm flex-fill flex-md-grow-0">
+                    <button type="button" class="filter-btn calendar-btn" id="takvimRaporlar" title="Gün Seç">📅</button>
+                    <button type="button" class="filter-btn active" id="btnRaporAll" onclick="hizliFiltreRapor('all', this)">Tümü</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreRapor('today', this)">Bugün</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreRapor('week', this)">Son 1 Hafta</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreRapor('month', this)">Son 1 Ay</button>
+                </div>
+                <button type="button" class="btn-clear flex-fill flex-md-grow-0" onclick="filtreleriSifirlaRapor()">Temizle</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th>Tarih</th><th>Rapor No</th><th>Analiz Cinsi</th><th>Takoz (gr)</th><th>Çeşni (gr)</th><th>Altın (Binde)</th><th>Gümüş (Binde)</th><th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in raporlar %}
+                        <tr class="rapor-satir" data-date="{{ r.tarih|date:'Y-m-d' }}" data-rapor-no="{{ r.rapor_no|lower }}">
+                            <td>{{ r.tarih|date:"d.m.Y" }}</td>
+                            <td class="fw-bold text-white">{{ r.rapor_no }}</td>
+                            <td>{{ r.analiz_cinsi }}</td>
+                            <td>{{ r.takoz_agirligi|floatformat:2 }}</td>
+                            <td>{{ r.cesni_agirligi|floatformat:2 }}</td>
+                            <td><span class="text-warning fw-bold">{{ r.altin_binde|floatformat:1 }}</span></td>
+                            <td><span class="text-warning fw-bold">{{ r.gumus_binde|floatformat:1 }}</span></td>
+                            <td class="text-end">
+                                <a href="{% url 'rapor_pdf_indir' r.id %}?goruntule=1" target="_blank" class="btn-action-view">Görüntüle</a>
+                                <a href="{% url 'rapor_pdf_indir' r.id %}" class="btn-action-download">İndir</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="8" class="text-center text-secondary py-4">Kayıtlı analiz raporu bulunamadı.</td></tr>
+                    {% endfor %}
+                    <tr id="sonucYokRapor" style="display: none;"><td colspan="8" class="text-center text-secondary py-4">Arama kriterlerine uygun rapor bulunamadı.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="raporPagination" class="pagination-custom"></div>
+    </div>
+
+    <!-- 2. SEKME: GEÇMİŞ İŞLEMLERİM (MOBİL UYUMLU FİLTRE VE BİLANÇO BUTONLARI) -->
+    <div id="sekmeIslemler" class="ana-sekme-pane card card-custom p-4 mb-4 shadow-sm" style="display: none;">
+        
+        <!-- FİLTRELER -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <div>
+                <h5 class="text-white mb-0">Geçmiş Hesaplama İşlemlerim</h5>
+                <span class="text-secondary small" id="islemSayac">Yükleniyor...</span>
+            </div>
+            <div class="d-flex align-items-center flex-wrap gap-2 w-100 w-md-auto">
+                <select id="islemTuruSelect" class="dropdown-filter flex-fill flex-md-grow-0" onchange="hizliFiltreDegistiIslem()">
+                    <option value="all">Tüm İşlem Türleri</option>
+                    <option value="Ayar Yükseltme">Ayar Yükseltme</option>
+                    <option value="Ayar Düşürme">Ayar Düşürme</option>
+                    <option value="Takoz Hesabı">Takoz Hesabı</option>
+                    <option value="Ayar Kontrol">Ayar Kontrol</option>
+                </select>
+
+                <div class="btn-group btn-group-sm flex-fill flex-md-grow-0">
+                    <button type="button" class="filter-btn calendar-btn" id="takvimIslemler" title="Gün Seç">📅</button>
+                    <button type="button" class="filter-btn active" id="btnIslemAll" onclick="hizliFiltreIslem('all', this)">Tümü</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreIslem('today', this)">Bugün</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreIslem('week', this)">Son 1 Hafta</button>
+                    <button type="button" class="filter-btn" onclick="hizliFiltreIslem('month', this)">Son 1 Ay</button>
+                </div>
+                <button type="button" class="btn-clear flex-fill flex-md-grow-0" onclick="filtreleriSifirlaIslemler()">Temizle</button>
+            </div>
+        </div>
+
+        <!-- EKRANIN EN ÜSTÜNDEKİ BİLANÇO KARTI: MOBİLDE ESNEK AKSİYON BUTONLARI -->
+        <div id="islemOzetPaneli" class="summary-card-custom">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom border-secondary pb-3 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <strong class="text-warning fs-6" id="ozetKategoriBaslik">Ayar Yükseltme Toplamı</strong>
+                    <span class="badge bg-warning text-dark px-2 py-1 fw-bold" id="ozetAdet">0 İşlem Seçildi</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 w-100 w-lg-auto mt-2 mt-lg-0">
+                    <button type="button" class="btn btn-sm btn-info text-dark fw-bold px-3 shadow-sm flex-fill flex-lg-grow-0" onclick="topluTabloModalAc()">
+                        👁 Tablo Olarak Görüntüle
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning text-dark fw-bold px-3 shadow-sm flex-fill flex-lg-grow-0" onclick="secilenleriExcelIndir()">
+                        📥 Detaylı Excel İndir
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-success fw-bold px-2 flex-fill flex-lg-grow-0" onclick="secilenleriKontrolEdildiYap()" title="Seçilenleri kontrol edildi olarak damgalar">
+                        ✓ Kontrol Edildi
+                    </button>
+                </div>
+            </div>
+
+            <!-- TOPLAM DEĞERLERİ KARTLARI -->
+            <div class="row g-3">
+                <div class="col-md-4 col-sm-6">
+                    <span class="text-secondary small d-block" id="labelToplamGirdi">Toplam İşlenen Altın (Girdi):</span>
+                    <strong class="text-white fs-5" id="ozetToplamGirdi">0.00 gr</strong>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <span class="text-secondary small d-block" id="labelToplamEklenen">Toplam İlave Edilen Has / Alaşım:</span>
+                    <strong class="text-warning fs-5" id="ozetToplamEklenen">+0.00 gr</strong>
+                </div>
+                <div class="col-md-4 col-12">
+                    <span class="text-secondary small d-block" id="labelToplamNihai">Elde Edilen Toplam Nihai Ağırlık:</span>
+                    <strong class="text-success fs-5" id="ozetToplamNihai">0.00 gr</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- İŞLEM LİSTESİ TABLOSU -->
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0" id="islemTablosu">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th style="width: 38px;"><input type="checkbox" id="tumunuSecIslem" onclick="tumunuSecTetikle(this)" title="Tümünü Seç"></th>
+                        <th style="width: 125px;">Tarih / Saat</th>
+                        <th style="width: 135px;">İşlem Türü</th>
+                        <th>İşlem Girdileri / Detayı</th>
+                        <th>Hesaplanan Sonuç</th>
+                        <th style="width: 95px;">Durum</th>
+                        <th class="text-end" style="width: 80px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="islemTabloGovde">
+                    {% for h in hesaplamalar %}
+                        <tr class="islem-satir" 
+                            data-id="{{ h.id }}"
+                            data-date="{{ h.tarih|date:'Y-m-d' }}" 
+                            data-tarih-tam="{{ h.tarih|date:'d.m.Y H:i' }}"
+                            data-type="{{ h.islem_turu }}"
+                            data-detay="{{ h.detay }}"
+                            data-sonuc="{{ h.sonuc }}">
+                            <td><input type="checkbox" class="islem-chk" onchange="canliToplamGuncelle()"></td>
+                            <td>
+                                <strong class="text-white">{{ h.tarih|date:"d.m.Y" }}</strong><br>
+                                <span class="text-secondary small">{{ h.tarih|date:"H:i" }}</span>
+                            </td>
+                            <td>
+                                {% if h.islem_turu == 'Ayar Yükseltme' %}
+                                    <span class="badge border border-warning text-warning" style="background: rgba(212,175,55,0.15);">Ayar Yükseltme</span>
+                                {% elif h.islem_turu == 'Ayar Düşürme' %}
+                                    <span class="badge border border-info text-info" style="background: rgba(56,189,248,0.15);">Ayar Düşürme</span>
+                                {% elif h.islem_turu == 'Takoz Hesabı' %}
+                                    <span class="badge border border-success text-success" style="background: rgba(34,197,94,0.15);">Takoz Hesabı</span>
+                                {% else %}
+                                    <span class="badge border border-primary text-primary" style="background: rgba(99,102,241,0.15);">Ayar Kontrol</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-light small">{{ h.detay }}</td>
+                            <td><strong class="text-warning">{{ h.sonuc }}</strong></td>
+                            <td class="durum-kolon"><span class="badge text-secondary border border-secondary" style="font-size:10px;">Bekliyor</span></td>
+                            <td class="text-end">
+                                <button type="button" class="btn-action-view" onclick="islemModalAc(this)" title="Detayı Görüntüle">Gözat</button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7" class="text-center text-secondary py-4">Henüz kayıtlı bir hesaplama işleminiz bulunmamaktadır.</td></tr>
+                    {% endfor %}
+                    <tr id="sonucYokIslem" style="display: none;"><td colspan="7" class="text-center text-secondary py-4">Seçilen filtrelere uygun işlem kaydı bulunamadı.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="islemPagination" class="pagination-custom"></div>
+    </div>
+
+</div>
+
+<!-- 1. MODAL: TOPLU İŞLEM TABLOSU -->
+<div class="modal fade" id="topluOzetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content card-custom text-white border-warning">
+            <div class="modal-header border-secondary">
+                <div>
+                    <h5 class="modal-title text-warning mb-0">Dönemsel İşlem Kontrol & Mutabakat Tablosu</h5>
+                    <span class="text-secondary small">{{ profil.firma_adi }} • <span id="modalMutabakatKategori">Tüm Kategoriler</span></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                
+                <div class="p-3 mb-3 bg-dark rounded border border-warning row g-2 text-center">
+                    <div class="col-md-3 col-6"><span class="text-secondary small d-block">İşlem Adedi</span><strong class="text-white fs-6" id="modalTopAdet">0 Kalem</strong></div>
+                    <div class="col-md-3 col-6"><span class="text-secondary small d-block">Toplam İşlenen (Girdi)</span><strong class="text-white fs-6" id="modalTopGirdi">0.00 gr</strong></div>
+                    <div class="col-md-3 col-6"><span class="text-secondary small d-block">Toplam İlave Has / Alaşım</span><strong class="text-warning fs-6" id="modalTopEklenen">+0.00 gr</strong></div>
+                    <div class="col-md-3 col-6"><span class="text-secondary small d-block">Elde Edilen Toplam Ağırlık</span><strong class="text-success fs-6" id="modalTopNihai">0.00 gr</strong></div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-bordered table-sm align-middle mb-0" id="modalOzetTablo">
+                        <thead class="table-secondary text-dark small text-center">
+                            <tr>
+                                <th style="width: 40px;">#</th>
+                                <th style="width: 130px;">Tarih / Saat</th>
+                                <th style="width: 130px;">Kategori</th>
+                                <th>Girdi ve İşlem Detayı</th>
+                                <th style="width: 140px;">İlave (Has / Alaşım)</th>
+                                <th style="width: 140px;">Nihai Sonuç</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalOzetTabloGovde" class="small">
+                        </tbody>
+                        <tfoot class="fw-bold bg-dark border-top border-warning">
+                            <tr class="text-warning">
+                                <td colspan="3" class="text-center">GENEL TOPLAMLAR</td>
+                                <td id="modalFootGirdi">Toplam Girdi: 0.00 gr</td>
+                                <td id="modalFootEklenen">+0.00 gr</td>
+                                <td id="modalFootNihai">0.00 gr</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer border-secondary d-flex justify-content-between">
+                <span class="text-secondary small">Not: Bu döküm atölye dönem mutabakatı ve bakiye kontrolü için hazırlanmıştır.</span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="window.print()">🖨 Yazdır / PDF Al</button>
+                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="secilenleriExcelIndir()">📥 Excel (.csv) İndir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. MODAL: TEKİL İŞLEM DETAY MODALI -->
+<div class="modal fade" id="islemDetayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-custom text-white border-warning">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-warning" id="modalTur">İşlem Detayı</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-secondary small mb-1">İşlem Zamanı: <strong class="text-white" id="modalTarih"></strong></p>
+                <div class="p-3 my-3 bg-dark rounded border border-secondary">
+                    <span class="text-secondary small d-block mb-1">Girdi & Analiz Detayı:</span>
+                    <strong class="text-light fs-6" id="modalDetay"></strong>
+                </div>
+                <div class="p-3 bg-dark rounded border border-warning">
+                    <span class="text-secondary small d-block mb-1">Hesaplanan Çıktı / Sonuç:</span>
+                    <strong class="text-warning fs-5" id="modalSonuc"></strong>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-warning btn-sm" onclick="window.print()">Yazdır</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- KAYAN BİLGİLENDİRME BANDI -->
+<div class="ticker-bar">
+    <div class="ticker-content">
+        Sitemizdeki sonuçlar yalnızca bilgilendirme amacıyla hazırlanmış olup resmi bir geçerliliği bulunmamaktadır. Raporun aslı Niz Ayar Evi'nden fiziki olarak teslim alınmalıdır. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sitemizdeki sonuçlar yalnızca bilgilendirme amacıyla hazırlanmış olup resmi bir geçerliliği bulunmamaktadır. Raporun aslı Niz Ayar Evi'nden fiziki olarak teslim alınmalıdır.
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
+
+<script>
+    flatpickr.localize(flatpickr.l10ns.tr);
+    var SAYFA_BOYUTU = 10;
+
+    function anaSekmeDegistir(id, btn) {
+        document.querySelectorAll('.ana-sekme-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.nav-tab-custom-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        btn.classList.add('active');
+    }
+
+    function formatTarihISO(d) {
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+    }
+
+    function parseGrams(text) {
+        if (!text) return 0;
+        var m = text.match(/([0-9]+(?:[\.,][0-9]+)?)\s*gr/i);
+        return m ? (parseFloat(m[1].replace(',', '.')) || 0) : 0;
+    }
+
+    function parseEklenen(sonuc) {
+        if (!sonuc) return 0;
+        var plusMatch = sonuc.match(/\+\s*([0-9]+(?:[\.,][0-9]+)?)\s*gr/i);
+        return plusMatch ? (parseFloat(plusMatch[1].replace(',', '.')) || 0) : 0;
+    }
+
+    function parseNihai(sonuc) {
+        if (!sonuc) return 0;
+        var topMatch = sonuc.match(/Toplam:\s*([0-9]+(?:[\.,][0-9]+)?)\s*gr/i);
+        return topMatch ? (parseFloat(topMatch[1].replace(',', '.')) || 0) : 0;
+    }
+
+    function canliToplamGuncelle() {
+        var chks = document.querySelectorAll('.islem-chk:checked');
+        var toplamGirdi = 0, toplamEklenen = 0, toplamNihai = 0;
+        var adet = chks.length;
+
+        var bazAlinacaklar = (adet > 0) ? chks : document.querySelectorAll('.islem-satir[style=""] .islem-chk, .islem-satir:not([style*="display: none"]) .islem-chk');
+
+        var kategoriler = new Set();
+
+        bazAlinacaklar.forEach(function(chk) {
+            var tr = chk.closest('.islem-satir');
+            var tur = tr.getAttribute('data-type') || '';
+            var detay = tr.getAttribute('data-detay') || '';
+            var sonuc = tr.getAttribute('data-sonuc') || '';
+
+            kategoriler.add(tur);
+            toplamGirdi += parseGrams(detay);
+            toplamEklenen += parseEklenen(sonuc);
+            toplamNihai += parseNihai(sonuc);
+        });
+
+        var katBaslik = "Tüm Kategoriler Toplamı";
+        if (kategoriler.size === 1) {
+            katBaslik = Array.from(kategoriler)[0] + " Toplamı";
+        } else if (kategoriler.size > 1) {
+            katBaslik = "Seçilen Karışık Kategoriler Toplamı";
+        }
+
+        document.getElementById('ozetKategoriBaslik').innerText = katBaslik;
+        document.getElementById('ozetAdet').innerText = adet > 0 ? (adet + " İşlem Seçildi") : (bazAlinacaklar.length + " İşlem Listeleniyor");
+        document.getElementById('ozetToplamGirdi').innerText = toplamGirdi.toFixed(2) + " gr";
+        document.getElementById('ozetToplamEklenen').innerText = "+" + toplamEklenen.toFixed(2) + " gr";
+        document.getElementById('ozetToplamNihai').innerText = toplamNihai.toFixed(2) + " gr";
+    }
+
+    function tumunuSecTetikle(masterChk) {
+        var gorunenChks = document.querySelectorAll('.islem-satir[style=""] .islem-chk, .islem-satir:not([style*="display: none"]) .islem-chk');
+        gorunenChks.forEach(c => c.checked = masterChk.checked);
+        canliToplamGuncelle();
+    }
+
+    var topluModalInstance = null;
+    function topluTabloModalAc() {
+        var chks = document.querySelectorAll('.islem-chk:checked');
+        var satirlar = [];
+
+        if (chks.length > 0) {
+            chks.forEach(c => satirlar.push(c.closest('.islem-satir')));
+        } else {
+            document.querySelectorAll('.islem-satir[style=""], .islem-satir:not([style*="display: none"])').forEach(s => satirlar.push(s));
+        }
+
+        if (satirlar.length === 0) {
+            alert("Görüntülenecek herhangi bir işlem kaydı bulunamadı.");
+            return;
+        }
+
+        var tbody = document.getElementById('modalOzetTabloGovde');
+        tbody.innerHTML = '';
+
+        var topGirdi = 0, topEklenen = 0, topNihai = 0;
+        var kategoriler = new Set();
+
+        satirlar.forEach(function(tr, idx) {
+            var tarih = tr.getAttribute('data-tarih-tam') || '';
+            var tur = tr.getAttribute('data-type') || '';
+            var detay = tr.getAttribute('data-detay') || '';
+            var sonuc = tr.getAttribute('data-sonuc') || '';
+
+            kategoriler.add(tur);
+
+            var g = parseGrams(detay);
+            var e = parseEklenen(sonuc);
+            var n = parseNihai(sonuc);
+
+            topGirdi += g;
+            topEklenen += e;
+            topNihai += n;
+
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="text-center text-secondary">${idx + 1}</td>
+                <td><strong>${tarih}</strong></td>
+                <td><span class="badge border border-warning text-warning">${tur}</span></td>
+                <td>${detay}</td>
+                <td class="text-end text-warning fw-bold">+${e.toFixed(2)} gr</td>
+                <td class="text-end text-success fw-bold">${n.toFixed(2)} gr</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        document.getElementById('modalMutabakatKategori').innerText = kategoriler.size === 1 ? Array.from(kategoriler)[0] : "Karışık Kategoriler";
+        document.getElementById('modalTopAdet').innerText = satirlar.length + " Kalem";
+        document.getElementById('modalTopGirdi').innerText = topGirdi.toFixed(2) + " gr";
+        document.getElementById('modalTopEklenen').innerText = "+" + topEklenen.toFixed(2) + " gr";
+        document.getElementById('modalTopNihai').innerText = topNihai.toFixed(2) + " gr";
+
+        document.getElementById('modalFootGirdi').innerText = "Toplam Girdi: " + topGirdi.toFixed(2) + " gr";
+        document.getElementById('modalFootEklenen').innerText = "+" + topEklenen.toFixed(2) + " gr";
+        document.getElementById('modalFootNihai').innerText = topNihai.toFixed(2) + " gr";
+
+        if (!topluModalInstance) {
+            topluModalInstance = new bootstrap.Modal(document.getElementById('topluOzetModal'));
+        }
+        topluModalInstance.show();
+    }
+
+    function secilenleriExcelIndir() {
+        var chks = document.querySelectorAll('.islem-chk:checked');
+        var satirlar = [];
+
+        if (chks.length > 0) {
+            chks.forEach(c => satirlar.push(c.closest('.islem-satir')));
+        } else {
+            document.querySelectorAll('.islem-satir[style=""], .islem-satir:not([style*="display: none"])').forEach(s => satirlar.push(s));
+        }
+
+        if (satirlar.length === 0) {
+            alert("İndirilecek işlem bulunamadı.");
+            return;
+        }
+
+        var csvContent = "\uFEFF";
+        csvContent += "NİZ AYAR EVİ - DÖNEMSEL İŞLEM KONTROL VE MUTABAKAT RAPORU\r\n";
+        csvContent += `Müşteri Firma:;{{ profil.firma_adi }}\r\n`;
+        csvContent += `Rapor Tarihi:;${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}\r\n`;
+        csvContent += `Toplam İşlem Adedi:;${satirlar.length} Kalem\r\n\r\n`;
+        csvContent += "Sıra No;Tarih;Saat;İşlem Türü;İşlem Girdileri ve Detayı;İlave Has / Alaşım (gr);Hesaplanan Nihai Sonuç;Durum\r\n";
+
+        var topGirdi = 0, topEklenen = 0, topNihai = 0;
+
+        satirlar.forEach(function(tr, idx) {
+            var tarihTam = tr.getAttribute('data-tarih-tam') || '';
+            var tarihParca = tarihTam.split(' ');
+            var tarih = tarihParca[0] || '';
+            var saat = tarihParca[1] || '';
+
+            var tur = tr.getAttribute('data-type') || '';
+            var detay = (tr.getAttribute('data-detay') || '').replace(/;/g, ',');
+            var sonuc = (tr.getAttribute('data-sonuc') || '').replace(/;/g, ',');
+
+            var g = parseGrams(detay);
+            var e = parseEklenen(sonuc);
+            var n = parseNihai(sonuc);
+
+            topGirdi += g;
+            topEklenen += e;
+            topNihai += n;
+
+            csvContent += `"${idx + 1}";"${tarih}";"${saat}";"${tur}";"${detay}";"+${e.toFixed(2)}";"${sonuc}";"Kontrol Edildi"\r\n`;
+        });
+
+        csvContent += `\r\n"";"GENEL TOPLAM";"";"${satirlar.length} Kalem İşlem";"Toplam İşlenen: ${topGirdi.toFixed(2)} gr";"+${topEklenen.toFixed(2)} gr Has/Alaşım";"Nihai Ağırlık: ${topNihai.toFixed(2)} gr";""\r\n`;
+
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        var link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Niz_Ayar_Evi_Mutabakat_${formatTarihISO(new Date())}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function secilenleriKontrolEdildiYap() {
+        var chks = document.querySelectorAll('.islem-chk:checked');
+        if (chks.length === 0) {
+            alert("Lütfen kontrol edildi olarak işaretlemek için en az bir işlem seçiniz.");
+            return;
+        }
+
+        chks.forEach(function(chk) {
+            var tr = chk.closest('.islem-satir');
+            var td = tr.querySelector('.durum-kolon');
+            if (td) {
+                td.innerHTML = '<span class="badge badge-kontrol">✓ Kontrol Edildi</span>';
+            }
+        });
+
+        alert(`${chks.length} adet işlem başarıyla "Kontrol Edildi" olarak işaretlendi.`);
+    }
+
+    var detayModalInstance = null;
+    function islemModalAc(btn) {
+        var tr = btn.closest('.islem-satir');
+        document.getElementById('modalTur').innerText = tr.getAttribute('data-type');
+        document.getElementById('modalTarih').innerText = tr.getAttribute('data-tarih-tam');
+        document.getElementById('modalDetay').innerText = tr.getAttribute('data-detay');
+        document.getElementById('modalSonuc').innerText = tr.getAttribute('data-sonuc');
+
+        if (!detayModalInstance) {
+            detayModalInstance = new bootstrap.Modal(document.getElementById('islemDetayModal'));
+        }
+        detayModalInstance.show();
+    }
+
+    function cizSayfalama(containerId, mevcutSayfa, toplamSayfa, fnAdi) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        if (toplamSayfa <= 1) { container.innerHTML = ''; return; }
+        var h = '<button type="button" ' + (mevcutSayfa === 1 ? 'disabled' : '') + ' onclick="' + fnAdi + '(' + (mevcutSayfa - 1) + ')">← Önceki</button>';
+        for (var i = 1; i <= toplamSayfa; i++) {
+            h += '<button type="button" class="' + (i === mevcutSayfa ? 'active' : '') + '" onclick="' + fnAdi + '(' + i + ')">' + i + '</button>';
+        }
+        h += '<button type="button" ' + (mevcutSayfa === toplamSayfa ? 'disabled' : '') + ' onclick="' + fnAdi + '(' + (mevcutSayfa + 1) + ')">Sonraki →</button>';
+        container.innerHTML = h;
+    }
+
+    var aktifHizliRapor = 'all', secilenTakvimRapor = '', raporMevcutSayfa = 1;
+    var raporInput = document.getElementById('raporAramaInput');
+    var fpRapor = flatpickr("#takvimRaporlar", {
+        dateFormat: "d.m.Y",
+        onChange: function(dates) {
+            if (dates.length > 0) {
+                secilenTakvimRapor = formatTarihISO(dates[0]);
+                aktifHizliRapor = 'calendar';
+                listeyiFiltreleRapor(true);
+            }
+        }
+    });
+
+    raporInput.addEventListener('input', () => listeyiFiltreleRapor(true));
+    function hizliFiltreRapor(tip, btn) {
+        aktifHizliRapor = tip; secilenTakvimRapor = ''; fpRapor.clear();
+        document.querySelectorAll('#sekmeRaporlar .filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        listeyiFiltreleRapor(true);
+    }
+    function filtreleriSifirlaRapor() {
+        raporInput.value = ''; secilenTakvimRapor = ''; fpRapor.clear();
+        hizliFiltreRapor('all', document.getElementById('btnRaporAll'));
+    }
+    function raporSayfaGit(s) { raporMevcutSayfa = s; listeyiFiltreleRapor(false); }
+
+    function listeyiFiltreleRapor(sifirla) {
+        if (sifirla) raporMevcutSayfa = 1;
+        var txt = raporInput.value.toLowerCase().trim();
+        var satirlar = document.querySelectorAll('.rapor-satir');
+        var bugun = formatTarihISO(new Date());
+        var eslesen = [];
+
+        satirlar.forEach(function(s) {
+            var d = s.getAttribute('data-date');
+            var no = s.getAttribute('data-rapor-no') || '';
+            var tUyar = true;
+            if (aktifHizliRapor === 'today') tUyar = (d === bugun);
+            else if (aktifHizliRapor === 'week') { var w = new Date(); w.setDate(w.getDate()-7); tUyar = (d >= formatTarihISO(w) && d <= bugun); }
+            else if (aktifHizliRapor === 'month') { var m = new Date(); m.setDate(m.getDate()-30); tUyar = (d >= formatTarihISO(m) && d <= bugun); }
+            else if (aktifHizliRapor === 'calendar') tUyar = (d === secilenTakvimRapor);
+
+            if (tUyar && (txt === '' || no.includes(txt))) eslesen.push(s);
+            s.style.display = 'none';
+        });
+
+        var topSayfa = Math.ceil(eslesen.length / SAYFA_BOYUTU) || 1;
+        var bas = (raporMevcutSayfa - 1) * SAYFA_BOYUTU;
+        for (var i = bas; i < bas + SAYFA_BOYUTU && i < eslesen.length; i++) eslesen[i].style.display = '';
+
+        document.getElementById('sonucYokRapor').style.display = (eslesen.length === 0 && satirlar.length > 0) ? '' : 'none';
+        document.getElementById('raporSayac').innerText = eslesen.length > 0 ? `Toplam ${eslesen.length} rapordan ${bas+1}-${Math.min(bas+SAYFA_BOYUTU, eslesen.length)} arası` : '0 rapor bulundu';
+        cizSayfalama('raporPagination', raporMevcutSayfa, topSayfa, 'raporSayfaGit');
+    }
+
+    var aktifHizliIslem = 'all', secilenTakvimIslem = '', islemMevcutSayfa = 1;
+    var islemSelect = document.getElementById('islemTuruSelect');
+    var fpIslem = flatpickr("#takvimIslemler", {
+        dateFormat: "d.m.Y",
+        onChange: function(dates) {
+            if (dates.length > 0) {
+                secilenTakvimIslem = formatTarihISO(dates[0]);
+                aktifHizliIslem = 'calendar';
+                listeyiFiltreleIslemler(true);
+            }
+        }
+    });
+
+    function hizliFiltreDegistiIslem() { listeyiFiltreleIslemler(true); }
+    function hizliFiltreIslem(tip, btn) {
+        aktifHizliIslem = tip; secilenTakvimIslem = ''; fpIslem.clear();
+        document.querySelectorAll('#sekmeIslemler .filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        listeyiFiltreleIslemler(true);
+    }
+    function filtreleriSifirlaIslemler() {
+        islemSelect.value = 'all'; secilenTakvimIslem = ''; fpIslem.clear();
+        hizliFiltreIslem('all', document.getElementById('btnIslemAll'));
+    }
+    function islemSayfaGit(s) { islemMevcutSayfa = s; listeyiFiltreleIslemler(false); }
+
+    function listeyiFiltreleIslemler(sifirla) {
+        if (sifirla) islemMevcutSayfa = 1;
+        var secTur = islemSelect.value;
+        var satirlar = document.querySelectorAll('.islem-satir');
+        var bugun = formatTarihISO(new Date());
+        var eslesen = [];
+
+        satirlar.forEach(function(s) {
+            var d = s.getAttribute('data-date');
+            var tur = s.getAttribute('data-type');
+            var tUyar = true;
+            if (aktifHizliIslem === 'today') tUyar = (d === bugun);
+            else if (aktifHizliIslem === 'week') { var w = new Date(); w.setDate(w.getDate()-7); tUyar = (d >= formatTarihISO(w) && d <= bugun); }
+            else if (aktifHizliIslem === 'month') { var m = new Date(); m.setDate(m.getDate()-30); tUyar = (d >= formatTarihISO(m) && d <= bugun); }
+            else if (aktifHizliIslem === 'calendar') tUyar = (d === secilenTakvimIslem);
+
+            var turUyar = (secTur === 'all' || tur === secTur);
+            if (tUyar && turUyar) eslesen.push(s);
+            s.style.display = 'none';
+        });
+
+        var topSayfa = Math.ceil(eslesen.length / SAYFA_BOYUTU) || 1;
+        var bas = (islemMevcutSayfa - 1) * SAYFA_BOYUTU;
+        for (var i = bas; i < bas + SAYFA_BOYUTU && i < eslesen.length; i++) eslesen[i].style.display = '';
+
+        document.getElementById('sonucYokIslem').style.display = (eslesen.length === 0 && satirlar.length > 0) ? '' : 'none';
+        document.getElementById('islemSayac').innerText = eslesen.length > 0 ? `Toplam ${eslesen.length} işlemden ${bas+1}-${Math.min(bas+SAYFA_BOYUTU, eslesen.length)} arası` : '0 işlem';
+        cizSayfalama('islemPagination', islemMevcutSayfa, topSayfa, 'islemSayfaGit');
+
+        canliToplamGuncelle();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        listeyiFiltreleRapor(true);
+        listeyiFiltreleIslemler(true);
+    });
+</script>
+
+</body>
+</html>
